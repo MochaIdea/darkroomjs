@@ -1,0 +1,1154 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>darkroom.crop.js</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+  <link rel="stylesheet" media="all" href="docco.css" />
+</head>
+<body>
+  <div id="container">
+    <div id="background"></div>
+    
+      <ul id="jump_to">
+        <li>
+          <a class="large" href="javascript:void(0);">Jump To &hellip;</a>
+          <a class="small" href="javascript:void(0);">+</a>
+          <div id="jump_wrapper">
+          <div id="jump_page">
+            
+              
+              <a class="source" href="darkroom.html">
+                darkroom.js
+              </a>
+            
+              
+              <a class="source" href="darkroom.crop.html">
+                darkroom.crop.js
+              </a>
+            
+              
+              <a class="source" href="darkroom.history.html">
+                darkroom.history.js
+              </a>
+            
+              
+              <a class="source" href="darkroom.rotate.html">
+                darkroom.rotate.js
+              </a>
+            
+              
+              <a class="source" href="darkroom.save.html">
+                darkroom.save.js
+              </a>
+            
+          </div>
+        </li>
+      </ul>
+    
+    <ul class="sections">
+        
+          <li id="title">
+              <div class="annotation">
+                  <h1>darkroom.crop.js</h1>
+              </div>
+          </li>
+        
+        
+        
+        <li id="section-1">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-1">&#182;</a>
+              </div>
+              
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>;(<span class="function"><span class="keyword">function</span><span class="params">(window, document, Darkroom, fabric)</span> {</span>
+  <span class="string">'use strict'</span>;
+
+  <span class="keyword">var</span> CropZone = fabric.util.createClass(fabric.Rect, {
+    _render: <span class="function"><span class="keyword">function</span><span class="params">(ctx)</span> {</span>
+      <span class="keyword">this</span>.callSuper(<span class="string">'_render'</span>, ctx);
+
+      <span class="keyword">var</span> canvas = ctx.canvas;
+      <span class="keyword">var</span> dashWidth = <span class="number">7</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-2">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-2">&#182;</a>
+              </div>
+              <p>Set original scale</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      <span class="keyword">var</span> flipX = <span class="keyword">this</span>.flipX ? -<span class="number">1</span> : <span class="number">1</span>;
+      <span class="keyword">var</span> flipY = <span class="keyword">this</span>.flipY ? -<span class="number">1</span> : <span class="number">1</span>;
+      <span class="keyword">var</span> scaleX = flipX / <span class="keyword">this</span>.scaleX;
+      <span class="keyword">var</span> scaleY = flipY / <span class="keyword">this</span>.scaleY;
+
+      ctx.scale(scaleX, scaleY);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-3">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-3">&#182;</a>
+              </div>
+              <p>Overlay rendering</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      ctx.fillStyle = <span class="string">'rgba(0, 0, 0, 0.5)'</span>;
+      <span class="keyword">this</span>._renderOverlay(ctx);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-4">&#182;</a>
+              </div>
+              <p>Set dashed borders</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      <span class="keyword">if</span> (ctx.setLineDash !== <span class="literal">undefined</span>)
+        ctx.setLineDash([dashWidth, dashWidth]);
+      <span class="keyword">else</span> <span class="keyword">if</span> (ctx.mozDash !== <span class="literal">undefined</span>)
+        ctx.mozDash = [dashWidth, dashWidth];</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-5">&#182;</a>
+              </div>
+              <p>First lines rendering with black</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      ctx.strokeStyle = <span class="string">'rgba(0, 0, 0, 0.2)'</span>;
+      <span class="keyword">this</span>._renderBorders(ctx);
+      <span class="keyword">this</span>._renderGrid(ctx);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-6">&#182;</a>
+              </div>
+              <p>Re render lines in white</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      ctx.lineDashOffset = dashWidth;
+      ctx.strokeStyle = <span class="string">'rgba(255, 255, 255, 0.4)'</span>;
+      <span class="keyword">this</span>._renderBorders(ctx);
+      <span class="keyword">this</span>._renderGrid(ctx);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-7">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-7">&#182;</a>
+              </div>
+              <p>Reset scale</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      ctx.scale(<span class="number">1</span>/scaleX, <span class="number">1</span>/scaleY);
+    },
+
+    _renderOverlay: <span class="function"><span class="keyword">function</span><span class="params">(ctx)</span> {</span>
+      <span class="keyword">var</span> canvas = ctx.canvas;
+      <span class="keyword">var</span> borderOffset = <span class="number">0</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-8">&#182;</a>
+              </div>
+              <p>   x0    x1        x2      x3
+y0 +------------------------+
+   |\\\\\\\\\\\\|
+   |\\\\\\\\\\\\|
+y1 +------+---------+-------+
+   |\\\|         |\\\|
+   |\\\|    0    |\\\|
+   |\\\|         |\\\|
+y2 +------+---------+-------+
+   |\\\\\\\\\\\\|
+   |\\\\\\\\\\\\|
+y3 +------------------------+</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      <span class="keyword">var</span> x0 = Math.ceil(-<span class="keyword">this</span>.getWidth() / <span class="number">2</span> - <span class="keyword">this</span>.getLeft());
+      <span class="keyword">var</span> x1 = Math.ceil(-<span class="keyword">this</span>.getWidth() / <span class="number">2</span>);
+      <span class="keyword">var</span> x2 = Math.ceil(<span class="keyword">this</span>.getWidth() / <span class="number">2</span>);
+      <span class="keyword">var</span> x3 = Math.ceil(<span class="keyword">this</span>.getWidth() / <span class="number">2</span> + (canvas.width - <span class="keyword">this</span>.getWidth() - <span class="keyword">this</span>.getLeft()));
+
+      <span class="keyword">var</span> y0 = Math.ceil(-<span class="keyword">this</span>.getHeight() / <span class="number">2</span> - <span class="keyword">this</span>.getTop());
+      <span class="keyword">var</span> y1 = Math.ceil(-<span class="keyword">this</span>.getHeight() / <span class="number">2</span>);
+      <span class="keyword">var</span> y2 = Math.ceil(<span class="keyword">this</span>.getHeight() / <span class="number">2</span>);
+      <span class="keyword">var</span> y3 = Math.ceil(<span class="keyword">this</span>.getHeight() / <span class="number">2</span> + (canvas.height - <span class="keyword">this</span>.getHeight() - <span class="keyword">this</span>.getTop()));</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-9">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-9">&#182;</a>
+              </div>
+              <p>Upper rect</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      ctx.fillRect(x0, y0, x3 - x0, y1 - y0 + borderOffset);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-10">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-10">&#182;</a>
+              </div>
+              <p>Left rect</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      ctx.fillRect(x0, y1, x1 - x0, y2 - y1 + borderOffset);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-11">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-11">&#182;</a>
+              </div>
+              <p>Right rect</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      ctx.fillRect(x2, y1, x3 - x2, y2 - y1 + borderOffset);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-12">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-12">&#182;</a>
+              </div>
+              <p>Down rect</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      ctx.fillRect(x0, y2, x3 - x0, y3 - y2);
+    },
+
+    _renderBorders: <span class="function"><span class="keyword">function</span><span class="params">(ctx)</span> {</span>
+      ctx.beginPath();
+      ctx.moveTo(-<span class="keyword">this</span>.getWidth()/<span class="number">2</span>, -<span class="keyword">this</span>.getHeight()/<span class="number">2</span>); <span class="comment">// upper left</span>
+      ctx.lineTo(<span class="keyword">this</span>.getWidth()/<span class="number">2</span>, -<span class="keyword">this</span>.getHeight()/<span class="number">2</span>); <span class="comment">// upper right</span>
+      ctx.lineTo(<span class="keyword">this</span>.getWidth()/<span class="number">2</span>, <span class="keyword">this</span>.getHeight()/<span class="number">2</span>); <span class="comment">// down right</span>
+      ctx.lineTo(-<span class="keyword">this</span>.getWidth()/<span class="number">2</span>, <span class="keyword">this</span>.getHeight()/<span class="number">2</span>); <span class="comment">// down left</span>
+      ctx.lineTo(-<span class="keyword">this</span>.getWidth()/<span class="number">2</span>, -<span class="keyword">this</span>.getHeight()/<span class="number">2</span>); <span class="comment">// upper left</span>
+      ctx.stroke();
+    },
+
+    _renderGrid: <span class="function"><span class="keyword">function</span><span class="params">(ctx)</span> {</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-13">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-13">&#182;</a>
+              </div>
+              <p>Vertical lines</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      ctx.beginPath();
+      ctx.moveTo(-<span class="keyword">this</span>.getWidth()/<span class="number">2</span> + <span class="number">1</span>/<span class="number">3</span> * <span class="keyword">this</span>.getWidth(), -<span class="keyword">this</span>.getHeight()/<span class="number">2</span>);
+      ctx.lineTo(-<span class="keyword">this</span>.getWidth()/<span class="number">2</span> + <span class="number">1</span>/<span class="number">3</span> * <span class="keyword">this</span>.getWidth(), <span class="keyword">this</span>.getHeight()/<span class="number">2</span>);
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(-<span class="keyword">this</span>.getWidth()/<span class="number">2</span> + <span class="number">2</span>/<span class="number">3</span> * <span class="keyword">this</span>.getWidth(), -<span class="keyword">this</span>.getHeight()/<span class="number">2</span>);
+      ctx.lineTo(-<span class="keyword">this</span>.getWidth()/<span class="number">2</span> + <span class="number">2</span>/<span class="number">3</span> * <span class="keyword">this</span>.getWidth(), <span class="keyword">this</span>.getHeight()/<span class="number">2</span>);
+      ctx.stroke();</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-14">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-14">&#182;</a>
+              </div>
+              <p>Horizontal lines</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      ctx.beginPath();
+      ctx.moveTo(-<span class="keyword">this</span>.getWidth()/<span class="number">2</span>, -<span class="keyword">this</span>.getHeight()/<span class="number">2</span> + <span class="number">1</span>/<span class="number">3</span> * <span class="keyword">this</span>.getHeight());
+      ctx.lineTo(<span class="keyword">this</span>.getWidth()/<span class="number">2</span>, -<span class="keyword">this</span>.getHeight()/<span class="number">2</span> + <span class="number">1</span>/<span class="number">3</span> * <span class="keyword">this</span>.getHeight());
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(-<span class="keyword">this</span>.getWidth()/<span class="number">2</span>, -<span class="keyword">this</span>.getHeight()/<span class="number">2</span> + <span class="number">2</span>/<span class="number">3</span> * <span class="keyword">this</span>.getHeight());
+      ctx.lineTo(<span class="keyword">this</span>.getWidth()/<span class="number">2</span>, -<span class="keyword">this</span>.getHeight()/<span class="number">2</span> + <span class="number">2</span>/<span class="number">3</span> * <span class="keyword">this</span>.getHeight());
+      ctx.stroke();
+    }
+  });
+
+  Darkroom.plugins[<span class="string">'crop'</span>] = Darkroom.Plugin.extend({</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-15">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-15">&#182;</a>
+              </div>
+              <p>Init point</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    startX: <span class="literal">null</span>,
+    startY: <span class="literal">null</span>,
+
+    defaults: {
+      minHeight: <span class="number">1</span>,
+      minWidth: <span class="number">1</span>,
+      ratio: <span class="literal">null</span>
+    },
+
+    initialize: <span class="function"><span class="keyword">function</span> <span class="title">InitDarkroomCropPlugin</span><span class="params">()</span> {</span>
+      <span class="keyword">var</span> buttonGroup = <span class="keyword">this</span>.darkroom.toolbar.createButtonGroup();
+
+      <span class="keyword">this</span>.cropButton = buttonGroup.createButton({
+        image: <span class="string">'crop'</span>
+      });
+      <span class="keyword">this</span>.okButton = buttonGroup.createButton({
+        image: <span class="string">'accept'</span>,
+        type: <span class="string">'success'</span>,
+        hide: <span class="literal">true</span>
+      });
+      <span class="keyword">this</span>.cancelButton = buttonGroup.createButton({
+        image: <span class="string">'cancel'</span>,
+        type: <span class="string">'danger'</span>,
+        hide: <span class="literal">true</span>
+      });</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-16">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-16">&#182;</a>
+              </div>
+              <p>Buttons click</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      <span class="keyword">this</span>.cropButton.addEventListener(<span class="string">'click'</span>, <span class="keyword">this</span>.toggleCrop.bind(<span class="keyword">this</span>));
+      <span class="keyword">this</span>.okButton.addEventListener(<span class="string">'click'</span>, <span class="keyword">this</span>.cropCurrentZone.bind(<span class="keyword">this</span>));
+      <span class="keyword">this</span>.cancelButton.addEventListener(<span class="string">'click'</span>, <span class="keyword">this</span>.releaseFocus.bind(<span class="keyword">this</span>));</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-17">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-17">&#182;</a>
+              </div>
+              <p>Canvas events</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      <span class="keyword">this</span>.darkroom.canvas.on(<span class="string">'mouse:down'</span>, <span class="keyword">this</span>.onMouseDown.bind(<span class="keyword">this</span>));
+      <span class="keyword">this</span>.darkroom.canvas.on(<span class="string">'mouse:move'</span>, <span class="keyword">this</span>.onMouseMove.bind(<span class="keyword">this</span>));
+      <span class="keyword">this</span>.darkroom.canvas.on(<span class="string">'mouse:up'</span>, <span class="keyword">this</span>.onMouseUp.bind(<span class="keyword">this</span>));
+      <span class="keyword">this</span>.darkroom.canvas.on(<span class="string">'object:moving'</span>, <span class="keyword">this</span>.onObjectMoving.bind(<span class="keyword">this</span>));
+      <span class="keyword">this</span>.darkroom.canvas.on(<span class="string">'object:scaling'</span>, <span class="keyword">this</span>.onObjectScaling.bind(<span class="keyword">this</span>));
+
+      <span class="keyword">this</span>.darkroom.addEventListener(<span class="string">'image:change'</span>, <span class="keyword">this</span>.releaseFocus.bind(<span class="keyword">this</span>));
+    },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-18">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-18">&#182;</a>
+              </div>
+              <p>Avoid crop zone to go beyond the canvas edges</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    onObjectMoving: <span class="function"><span class="keyword">function</span><span class="params">(event)</span> {</span>
+      <span class="keyword">if</span> (!<span class="keyword">this</span>.hasFocus()) {
+        <span class="keyword">return</span>;
+      }
+
+      <span class="keyword">var</span> currentObject = event.target;
+      <span class="keyword">if</span> (currentObject !== <span class="keyword">this</span>.cropZone)
+        <span class="keyword">return</span>;
+
+      <span class="keyword">var</span> canvas = <span class="keyword">this</span>.darkroom.canvas;
+      <span class="keyword">var</span> x = currentObject.getLeft(), y = currentObject.getTop();
+      <span class="keyword">var</span> w = currentObject.getWidth(), h = currentObject.getHeight();
+      <span class="keyword">var</span> maxX = canvas.getWidth() - w;
+      <span class="keyword">var</span> maxY = canvas.getHeight() - h;
+
+      <span class="keyword">if</span> (x &lt; <span class="number">0</span>)
+        currentObject.set(<span class="string">'left'</span>, <span class="number">0</span>);
+      <span class="keyword">if</span> (y &lt; <span class="number">0</span>)
+        currentObject.set(<span class="string">'top'</span>, <span class="number">0</span>);
+      <span class="keyword">if</span> (x &gt; maxX)
+        currentObject.set(<span class="string">'left'</span>, maxX);
+      <span class="keyword">if</span> (y &gt; maxY)
+        currentObject.set(<span class="string">'top'</span>, maxY);
+    },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-19">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-19">&#182;</a>
+              </div>
+              <p>Prevent crop zone from going beyond the canvas edges (like mouseMove)</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    onObjectScaling: <span class="function"><span class="keyword">function</span><span class="params">(event)</span> {</span>
+      <span class="keyword">if</span> (!<span class="keyword">this</span>.hasFocus()) {
+        <span class="keyword">return</span>;
+      }
+
+      <span class="keyword">var</span> currentObject = event.target;
+      <span class="keyword">if</span> (currentObject !== <span class="keyword">this</span>.cropZone)
+        <span class="keyword">return</span>;
+
+      <span class="keyword">var</span> canvas = <span class="keyword">this</span>.darkroom.canvas;
+      <span class="keyword">var</span> x = event.e.pageX - canvas._offset.left;
+      <span class="keyword">var</span> y = event.e.pageY - canvas._offset.top;
+
+      <span class="keyword">var</span> minX = currentObject.getLeft();
+      <span class="keyword">var</span> minY = currentObject.getTop();
+      <span class="keyword">var</span> maxX = currentObject.getLeft() + currentObject.getWidth();
+      <span class="keyword">var</span> maxY = currentObject.getTop() + currentObject.getHeight();
+
+      <span class="keyword">if</span> (minX &lt; <span class="number">0</span> || maxX &gt; canvas.getWidth()) {
+        <span class="keyword">var</span> lastScaleX = <span class="keyword">this</span>.lastScaleX || <span class="number">1</span>;
+        currentObject.setScaleX(lastScaleX);
+      }
+      <span class="keyword">if</span> (minX &lt; <span class="number">0</span>) {
+        currentObject.setLeft(<span class="number">0</span>);
+      }
+
+      <span class="keyword">if</span> (minY &lt; <span class="number">0</span> || maxY &gt; canvas.getHeight()) {
+        <span class="keyword">var</span> lastScaleY = <span class="keyword">this</span>.lastScaleY || <span class="number">1</span>;
+        currentObject.setScaleY(lastScaleY);
+      }
+      <span class="keyword">if</span> (minY &lt; <span class="number">0</span>) {
+        currentObject.setTop(<span class="number">0</span>);
+      }
+
+      <span class="keyword">if</span> (currentObject.getWidth() &lt; <span class="keyword">this</span>.options.minWidth) {
+        currentObject.scaleToWidth(<span class="keyword">this</span>.options.minWidth);
+      }
+      <span class="keyword">if</span> (currentObject.getHeight() &lt; <span class="keyword">this</span>.options.minHeight) {
+        currentObject.scaleToHeight(<span class="keyword">this</span>.options.minHeight);
+      }
+
+      <span class="keyword">this</span>.lastScaleX = currentObject.getScaleX();
+      <span class="keyword">this</span>.lastScaleY = currentObject.getScaleY();
+    },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-20">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-20">&#182;</a>
+              </div>
+              <p>Init crop zone</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    onMouseDown: <span class="function"><span class="keyword">function</span><span class="params">(event)</span> {</span>
+      <span class="keyword">if</span> (!<span class="keyword">this</span>.hasFocus()) {
+        <span class="keyword">return</span>;
+      }
+
+      <span class="keyword">var</span> canvas = <span class="keyword">this</span>.darkroom.canvas;
+      <span class="keyword">var</span> x = event.e.pageX - canvas._offset.left;
+      <span class="keyword">var</span> y = event.e.pageY - canvas._offset.top;
+      <span class="keyword">var</span> point = <span class="keyword">new</span> fabric.Point(x, y);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-21">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-21">&#182;</a>
+              </div>
+              <p>Check if user want to scale or drag the crop zone.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      <span class="keyword">var</span> activeObject = canvas.getActiveObject();
+      <span class="keyword">if</span> (activeObject === <span class="keyword">this</span>.cropZone || <span class="keyword">this</span>.cropZone.containsPoint(point)) {
+        <span class="keyword">return</span>;
+      }
+
+      canvas.discardActiveObject();
+      <span class="keyword">this</span>.cropZone.setWidth(<span class="number">0</span>);
+      <span class="keyword">this</span>.cropZone.setHeight(<span class="number">0</span>);
+      <span class="keyword">this</span>.cropZone.setScaleX(<span class="number">1</span>);
+      <span class="keyword">this</span>.cropZone.setScaleY(<span class="number">1</span>);
+
+      <span class="keyword">this</span>.startX = x;
+      <span class="keyword">this</span>.startY = y;
+    },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-22">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-22">&#182;</a>
+              </div>
+              <p>Extend crop zone</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    onMouseMove: <span class="function"><span class="keyword">function</span><span class="params">(event)</span> {</span>
+      <span class="keyword">if</span> (<span class="literal">null</span> === <span class="keyword">this</span>.startX || <span class="literal">null</span> === <span class="keyword">this</span>.startY) {
+        <span class="keyword">return</span>;
+      }
+
+      <span class="keyword">var</span> canvas = <span class="keyword">this</span>.darkroom.canvas;
+      <span class="keyword">var</span> x = event.e.pageX - canvas._offset.left;
+      <span class="keyword">var</span> y = event.e.pageY - canvas._offset.top;
+
+      <span class="keyword">this</span>._renderCropZone(<span class="keyword">this</span>.startX, <span class="keyword">this</span>.startY, x, y);
+    },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-23">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-23">&#182;</a>
+              </div>
+              <p>Finish crop zone</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    onMouseUp: <span class="function"><span class="keyword">function</span><span class="params">(event)</span> {</span>
+      <span class="keyword">if</span> (<span class="literal">null</span> === <span class="keyword">this</span>.startX || <span class="literal">null</span> === <span class="keyword">this</span>.startY) {
+        <span class="keyword">return</span>;
+      }
+
+      <span class="keyword">var</span> canvas = <span class="keyword">this</span>.darkroom.canvas;
+      <span class="keyword">this</span>.cropZone.setCoords();
+      canvas.setActiveObject(<span class="keyword">this</span>.cropZone);
+      canvas.calcOffset();
+
+      <span class="keyword">this</span>.startX = <span class="literal">null</span>;
+      <span class="keyword">this</span>.startY = <span class="literal">null</span>;
+    },
+
+    selectZone: <span class="function"><span class="keyword">function</span><span class="params">(x, y, width, height, forceDimension)</span> {</span>
+      <span class="keyword">if</span> (!<span class="keyword">this</span>.hasFocus())
+        <span class="keyword">this</span>.requireFocus();
+
+      <span class="keyword">if</span> (!forceDimension) {
+        <span class="keyword">this</span>._renderCropZone(x, y, x+width, y+height);
+      } <span class="keyword">else</span> {
+        <span class="keyword">this</span>.cropZone.set({
+          <span class="string">'left'</span>: x,
+          <span class="string">'top'</span>: y,
+          <span class="string">'width'</span>: width,
+          <span class="string">'height'</span>: height
+        });
+      }
+
+      <span class="keyword">var</span> canvas = <span class="keyword">this</span>.darkroom.canvas;
+      canvas.bringToFront(<span class="keyword">this</span>.cropZone);
+      <span class="keyword">this</span>.cropZone.setCoords();
+      canvas.setActiveObject(<span class="keyword">this</span>.cropZone);
+      canvas.calcOffset();
+    },
+
+    toggleCrop: <span class="function"><span class="keyword">function</span><span class="params">()</span> {</span>
+      <span class="keyword">if</span> (!<span class="keyword">this</span>.hasFocus())
+        <span class="keyword">this</span>.requireFocus();
+      <span class="keyword">else</span>
+        <span class="keyword">this</span>.releaseFocus();
+    },
+
+    cropCurrentZone: <span class="function"><span class="keyword">function</span><span class="params">()</span> {</span>
+      <span class="keyword">if</span> (!<span class="keyword">this</span>.hasFocus()) {
+        <span class="keyword">return</span>;
+      }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-24">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-24">&#182;</a>
+              </div>
+              <p>Avoid croping empty zone</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      <span class="keyword">if</span> (<span class="keyword">this</span>.cropZone.width &lt; <span class="number">1</span> &amp;&amp; <span class="keyword">this</span>.cropZone.height &lt; <span class="number">1</span>)
+        <span class="keyword">return</span>;
+
+      <span class="keyword">var</span> _<span class="keyword">this</span> = <span class="keyword">this</span>;
+      <span class="keyword">var</span> darkroom = <span class="keyword">this</span>.darkroom;
+      <span class="keyword">var</span> canvas = darkroom.canvas;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-25">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-25">&#182;</a>
+              </div>
+              <p>Hide crop rectangle to avoid snapshot it with the image</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      <span class="keyword">this</span>.cropZone.visible = <span class="literal">false</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-26">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-26">&#182;</a>
+              </div>
+              <p>Snapshot the image delimited by the crop zone</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      <span class="keyword">var</span> image = <span class="keyword">new</span> Image();
+      image.onload = <span class="function"><span class="keyword">function</span><span class="params">()</span> {</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-27">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-27">&#182;</a>
+              </div>
+              <p>Validate image</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="keyword">if</span> (<span class="keyword">this</span>.height &lt; <span class="number">1</span> || <span class="keyword">this</span>.width &lt; <span class="number">1</span>) {
+          <span class="keyword">return</span>;
+        }
+
+        <span class="keyword">var</span> imgInstance = <span class="keyword">new</span> fabric.Image(<span class="keyword">this</span>, {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-28">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-28">&#182;</a>
+              </div>
+              <p>options to make the image static</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>          selectable: <span class="literal">false</span>,
+          evented: <span class="literal">false</span>,
+          lockMovementX: <span class="literal">true</span>,
+          lockMovementY: <span class="literal">true</span>,
+          lockRotation: <span class="literal">true</span>,
+          lockScalingX: <span class="literal">true</span>,
+          lockScalingY: <span class="literal">true</span>,
+          lockUniScaling: <span class="literal">true</span>,
+          hasControls: <span class="literal">false</span>,
+          hasBorders: <span class="literal">false</span>
+        });
+
+        <span class="keyword">var</span> width = <span class="keyword">this</span>.width;
+        <span class="keyword">var</span> height = <span class="keyword">this</span>.height;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-29">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-29">&#182;</a>
+              </div>
+              <p>Update canvas size</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        canvas.setWidth(width);
+        canvas.setHeight(height);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-30">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-30">&#182;</a>
+              </div>
+              <p>Add image</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        _<span class="keyword">this</span>.darkroom.image.remove();
+        _<span class="keyword">this</span>.darkroom.image = imgInstance;
+        canvas.add(imgInstance);
+
+        darkroom.dispatchEvent(<span class="keyword">new</span> Event(<span class="string">'image:change'</span>));
+      };
+
+      image.src = canvas.toDataURL({
+        left: <span class="keyword">this</span>.cropZone.getLeft(),
+        top: <span class="keyword">this</span>.cropZone.getTop(),
+        width: <span class="keyword">this</span>.cropZone.getWidth(),
+        height: <span class="keyword">this</span>.cropZone.getHeight()
+      });
+    },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-31">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-31">&#182;</a>
+              </div>
+              <p>Test wether crop zone is set</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    hasFocus: <span class="function"><span class="keyword">function</span><span class="params">()</span> {</span>
+      <span class="keyword">return</span> <span class="keyword">this</span>.cropZone !== <span class="literal">undefined</span>;
+    },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-32">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-32">&#182;</a>
+              </div>
+              <p>Create the crop zone</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    requireFocus: <span class="function"><span class="keyword">function</span><span class="params">()</span> {</span>
+      <span class="keyword">this</span>.cropZone = <span class="keyword">new</span> CropZone({
+        fill: <span class="string">'transparent'</span>,
+        hasBorders: <span class="literal">false</span>,
+        originX: <span class="string">'left'</span>,
+        originY: <span class="string">'top'</span>,</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-33">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-33">&#182;</a>
+              </div>
+              <p>stroke: &#39;#444&#39;,
+strokeDashArray: [5, 5],
+borderColor: &#39;#444&#39;,</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        cornerColor: <span class="string">'#444'</span>,
+        cornerSize: <span class="number">8</span>,
+        transparentCorners: <span class="literal">false</span>,
+        lockRotation: <span class="literal">true</span>,
+        hasRotatingPoint: <span class="literal">false</span>,
+      });
+
+      <span class="keyword">if</span> (<span class="literal">null</span> !== <span class="keyword">this</span>.options.ratio) {
+        <span class="keyword">this</span>.cropZone.set(<span class="string">'lockUniScaling'</span>, <span class="literal">true</span>);
+      }
+
+      <span class="keyword">this</span>.darkroom.canvas.add(<span class="keyword">this</span>.cropZone);
+      <span class="keyword">this</span>.darkroom.canvas.defaultCursor = <span class="string">'crosshair'</span>;
+
+      <span class="keyword">this</span>.cropButton.active(<span class="literal">true</span>);
+      <span class="keyword">this</span>.okButton.hide(<span class="literal">false</span>);
+      <span class="keyword">this</span>.cancelButton.hide(<span class="literal">false</span>);
+    },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-34">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-34">&#182;</a>
+              </div>
+              <p>Remove the crop zone</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    releaseFocus: <span class="function"><span class="keyword">function</span><span class="params">()</span> {</span>
+      <span class="keyword">if</span> (<span class="literal">undefined</span> === <span class="keyword">this</span>.cropZone)
+        <span class="keyword">return</span>;
+
+      <span class="keyword">this</span>.cropZone.remove();
+      <span class="keyword">this</span>.cropZone = <span class="literal">undefined</span>;
+
+      <span class="keyword">this</span>.cropButton.active(<span class="literal">false</span>);
+      <span class="keyword">this</span>.okButton.hide(<span class="literal">true</span>);
+      <span class="keyword">this</span>.cancelButton.hide(<span class="literal">true</span>);
+
+      <span class="keyword">this</span>.darkroom.canvas.defaultCursor = <span class="string">'default'</span>;
+    },
+
+    _renderCropZone: <span class="function"><span class="keyword">function</span><span class="params">(fromX, fromY, toX, toY)</span> {</span>
+      <span class="keyword">var</span> canvas = <span class="keyword">this</span>.darkroom.canvas;
+
+      <span class="keyword">var</span> isRight = (toX &gt; fromX);
+      <span class="keyword">var</span> isLeft = !isRight;
+      <span class="keyword">var</span> isDown = (toY &gt; fromY);
+      <span class="keyword">var</span> isUp = !isDown;
+
+      <span class="keyword">var</span> minWidth = Math.min(+<span class="keyword">this</span>.options.minWidth, canvas.getWidth());
+      <span class="keyword">var</span> minHeight = Math.min(+<span class="keyword">this</span>.options.minHeight, canvas.getHeight());</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-35">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-35">&#182;</a>
+              </div>
+              <p>Define corner coordinates</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      <span class="keyword">var</span> leftX = Math.min(fromX, toX);
+      <span class="keyword">var</span> rightX = Math.max(fromX, toX);
+      <span class="keyword">var</span> topY = Math.min(fromY, toY);
+      <span class="keyword">var</span> bottomY = Math.max(fromY, toY);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-36">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-36">&#182;</a>
+              </div>
+              <p>Replace current point into the canvas</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      leftX = Math.max(<span class="number">0</span>, leftX);
+      rightX = Math.min(canvas.getWidth(), rightX);
+      topY = Math.max(<span class="number">0</span>, topY)
+      bottomY = Math.min(canvas.getHeight(), bottomY);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-37">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-37">&#182;</a>
+              </div>
+              <p>Recalibrate coordinates according to given options</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      <span class="keyword">if</span> (rightX - leftX &lt; minWidth) {
+        <span class="keyword">if</span> (isRight)
+          rightX = leftX + minWidth;
+        <span class="keyword">else</span>
+          leftX = rightX - minWidth;
+      }
+      <span class="keyword">if</span> (bottomY - topY &lt; minHeight) {
+        <span class="keyword">if</span> (isDown)
+          bottomY = topY + minHeight;
+        <span class="keyword">else</span>
+          topY = bottomY - minHeight;
+      }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-38">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-38">&#182;</a>
+              </div>
+              <p>Truncate truncate according to canvas dimensions</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      <span class="keyword">if</span> (leftX &lt; <span class="number">0</span>) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-39">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-39">&#182;</a>
+              </div>
+              <p>Translate to the left</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        rightX += Math.abs(leftX);
+        leftX = <span class="number">0</span>
+      }
+      <span class="keyword">if</span> (rightX &gt; canvas.getWidth()) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-40">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-40">&#182;</a>
+              </div>
+              <p>Translate to the right</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        leftX -= (rightX - canvas.getWidth());
+        rightX = canvas.getWidth();
+      }
+      <span class="keyword">if</span> (topY &lt; <span class="number">0</span>) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-41">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-41">&#182;</a>
+              </div>
+              <p>Translate to the bottom</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        bottomY += Math.abs(topY);
+        topY = <span class="number">0</span>
+      }
+      <span class="keyword">if</span> (bottomY &gt; canvas.getHeight()) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-42">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-42">&#182;</a>
+              </div>
+              <p>Translate to the right</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        topY -= (bottomY - canvas.getHeight());
+        bottomY = canvas.getHeight();
+      }
+
+      <span class="keyword">var</span> width = rightX - leftX;
+      <span class="keyword">var</span> height = bottomY - topY;
+      <span class="keyword">var</span> currentRatio = width / height;
+
+      <span class="keyword">if</span> (<span class="keyword">this</span>.options.ratio &amp;&amp; +<span class="keyword">this</span>.options.ratio !== currentRatio) {
+        <span class="keyword">var</span> ratio = +<span class="keyword">this</span>.options.ratio;
+
+        <span class="keyword">if</span> (currentRatio &lt; ratio) {
+          <span class="keyword">var</span> newWidth = height * ratio;
+          <span class="keyword">if</span> (isLeft) {
+            leftX -= (newWidth - width);
+          }
+          width = newWidth;
+        } <span class="keyword">else</span> <span class="keyword">if</span> (currentRatio &gt; ratio) {
+          <span class="keyword">var</span> newHeight = height / (ratio * height/width);
+          <span class="keyword">if</span> (isUp) {
+            topY -= (newHeight - height);
+          }
+          height = newHeight;
+        }
+
+        <span class="keyword">if</span> (leftX &lt; <span class="number">0</span>) {
+          leftX = <span class="number">0</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-43">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-43">&#182;</a>
+              </div>
+              <p>TODO</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        }
+        <span class="keyword">if</span> (topY &lt; <span class="number">0</span>) {
+          topY = <span class="number">0</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-44">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-44">&#182;</a>
+              </div>
+              <p>TODO</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        }
+        <span class="keyword">if</span> (leftX + width &gt; canvas.getWidth()) {
+          <span class="keyword">var</span> newWidth = canvas.getWidth() - leftX;
+          height = newWidth * height / width;
+          width = newWidth;
+          <span class="keyword">if</span> (isUp) {
+            topY = fromY - height;
+          }
+        }
+        <span class="keyword">if</span> (topY + height &gt; canvas.getHeight()) {
+          <span class="keyword">var</span> newHeight = canvas.getHeight() - topY;
+          width = width * newHeight / height;
+          height = newHeight;
+          <span class="keyword">if</span> (isLeft) {
+            leftX = fromX - width;
+          }
+        }
+      }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-45">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-45">&#182;</a>
+              </div>
+              <p>Apply coordinates</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      <span class="keyword">this</span>.cropZone.left = leftX;
+      <span class="keyword">this</span>.cropZone.top = topY;
+      <span class="keyword">this</span>.cropZone.width = width;
+      <span class="keyword">this</span>.cropZone.height = height;
+
+      <span class="keyword">this</span>.darkroom.canvas.bringToFront(<span class="keyword">this</span>.cropZone);
+    }
+  });
+})(window, document, Darkroom, fabric);</pre></div></div>
+            
+        </li>
+        
+    </ul>
+  </div>
+</body>
+</html>
